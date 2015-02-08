@@ -22,6 +22,20 @@ nharris@cedarville.edu
 - Avoid Inefficient CSS
 - Minify JS and CSS
 
+* Minimize HTTP Requests and round trips
 
+- Use CSS sprites
+
+.image css-sprite.png
+.caption *Example CSS Sprite*
+
+* Minimize HTTP Requests and round trips
+
+- Use AppCache
+	- Controlled by manifest file which tells the browser where to get resources
+	- Problem: All content must be reloaded if the manifest file changes
+- Author recommends attempting to fit framework of site in first packet
+
+* Compress Files
 
 
