@@ -5,12 +5,37 @@ Nathan Harris
 nharris@cedarville.edu
 
 
-* Intro
+* Why is this topic important?
 
-Some Text
+- Mobile data traffic has been increasing exponentially
+- Some optimization techniques for desktop do not help mobile performance
+- Users expect fast load times and smooth transitions
 
-** Subsection
+* Some Recommendations
 
-- bullets
-- more bullets
-- a bullet with
+- Minimize HTTP Requests and round trips
+- Compress Files
+- Be aware of JavaScript parse time
+- Avoid layout and style calculation
+- Predload Components
+- Optimize Images
+- Avoid Inefficient CSS
+- Minify JS and CSS
+
+* Minimize HTTP Requests and round trips
+
+- Use CSS sprites
+
+.image css-sprite.png
+.caption *Example CSS Sprite*
+
+* Minimize HTTP Requests and round trips
+
+- Use AppCache
+-- Controlled by manifest file which tells the browser where to get resources
+-- Problem: All content must be reloaded if the manifest file changes
+- Author recommends attempting to fit framework of site in first packet
+
+* Compress Files
+
+
