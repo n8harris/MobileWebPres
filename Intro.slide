@@ -27,7 +27,6 @@ nharris@cedarville.edu
 - Use CSS sprites
 
 .image css-sprite.png
-.caption *Example CSS Sprite*
 
 * Minimize HTTP Requests and round trips
 
