@@ -24,13 +24,6 @@ nharris@cedarville.edu
 
 * Minimize HTTP Requests and round trips
 
-- Use CSS sprites
-
-.image ./css-sprite.png
-.caption *Example CSS Sprite*
-
-* Minimize HTTP Requests and round trips
-
 - Use AppCache
 	- Controlled by manifest file which tells the browser where to get resources
 	- Problem: All content must be reloaded if the manifest file changes
