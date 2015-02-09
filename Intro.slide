@@ -4,6 +4,9 @@ Mobile-friendly Web Apps
 Nathan Harris
 nharris@cedarville.edu
 
+* Why did I choose this topic?
+- I am interested in Web Development
+- I enjoy making the user experience as pain-free as possible
 
 * Why is this topic important?
 
@@ -17,7 +20,7 @@ nharris@cedarville.edu
 - Compress Files
 - Be aware of JavaScript parse time
 - Avoid layout and style calculation
-- Predload Components
+- Preload Components
 - Optimize Images
 - Avoid Inefficient CSS
 - Minify JS and CSS
@@ -31,11 +34,270 @@ nharris@cedarville.edu
 
 * Minimize HTTP Requests and round trips
 
-- Use AppCache
+** Use AppCache
 - Controlled by manifest file which tells the browser where to get resources
 - Problem: All content must be reloaded if the manifest file changes
 - Author recommends attempting to fit framework of site in first packet
 
 * Compress Files
+
+- Apache features a module called deflate which allows server output to be compressed
+- Compression can reduce size of transferred response by 90%
+
+* Be Aware of JavaScript Parse Time
+
+- Parsing of JavaScript can take 10 times as long on mobile
+- The window.performance Object contains good information to track page-load metrics
+- Surprisingly, the accepted way of alleviating parse time delay is doing something like this:
+	<script type=”deferred” id=”module1”>
+		var start _ checkpoint = new Date();
+	</script>
+- When the script is ready to use, a JavaScript function will switch the type
+
+* Avoid Layout and Style Calculation
+
+- Certain JavaScript functions can trigger recomputation of the layout of elements
+- Rule of thumb is to avoid reading properties that rely on the position of elements
+- If you can't avoid them, arrange them in a strategic way to avoid constantly interrupting execution
+
+* Preload Components
+
+- Most effective when you can predict a user's actions
+- This allows for the illusion of the page loading instantly
+
+* Optimize Images
+
+- Don't use images that are too large or too high quality, especially if they will simply be resized
+- Don't use PNGs if JPEGs will suffice
+
+* Avoid Inefficient CSS Selectors
+
+- In the case of something like, _ul_li_ it is preferred to simply add a class to every _li_
+- Complex selectors are still faster than doing equivalent work in JavaScript
+
+* Minify JS and CSS
+
+- Doesn't affect parse time
+- Reduces file size
+- The CS Website combines all JS files and CSS files into one JS file and one CSS file and minifies them
+
+* Case Study: html5rocks.com
+
+- Study by Ryan Fioravanti of Google
+- Attempt to optimize html5rocks.com for mobile
+
+* Interesting page load metrics
+
+** navigationStart
+
+- Time that user initiated load of this page
+
+** responseStart
+
+- Time that browser starts receiving content
+
+**domContentLoadedEventStart
+
+- Time that the document becomes interactive
+
+**loadEventStart
+
+- Time that document and all resources are downloaded
+
+* Initial timings
+
+DOM time = domContentLoadedEventStart - responseStart
+
+Total 812kb transferred
+
+.image ./chart-1.png
+
+Measured on string wifi network, averaged over 50 samples
+
+* Serving scaled images impact
+
+2% improvement on DOM processing by scaling images properly
+
+Total 745kb transferred (67kb saved) - 8%
+
+.image ./chart-2.png
+
+* How about JPEG
+
+Another 2% improvement in rendering
+
+Total 419kb transferred (326kb saved) - 44%
+
+.image ./chart-3.png
+
+* Network trace
+
+Uh oh, jQuery looking kind of big
+
+.image ./network-trace.png
+
+* jQuery minification impact
+
+No rendering improvement, hmm...
+
+Total 368kb transferred (51kb saved) - 12%
+
+.image ./chart-4.png
+
+* Inefficient CSS
+
+Descendant selectors with common keys
+
+	body * {...}
+	ul li a {...}
+	#footer h3 {...}
+	
+Rules with overqualified selectors
+
+	ul#top_blue_nav {...}
+	form#UserLogin {...}
+	
+* CSS recommendations
+
+Avoid universal selector
+
+- Instead allow elements to inherit from ancestors
+
+Make rules as specific as possible
+
+- Prefer class and ID selectors over tag selectors
+
+Use class selector instead of descendant selectors
+
+	# Bad                           # Good
+	* {font-family: Arial;}         body {font-family: Arial;}
+	ul li {color: blue;}            .unordered-list-item {color: blue;}
+	ol li {color: red;}             .ordered-list-item {color: red;}
+	div {display:block;}            ...
+	
+* Back to html5rocks.com
+
+Universal selector setting default CSS property
+
+	* { -webkit-box-sizing: content-box; }
+	
+* Does it matter?
+
+Another 3% improvement in rendering
+
+~50ms saved in rendering, just as expected from the profiling
+
+.image ./chart-5.png
+
+* Check for undeferred JavaScript
+
+The presence of scripts can block rendering of the page
+
+- External scripts will block on download
+- External and internal scripts will block on execution
+- Defer/async attributes work but can't be applied to inline script
+
+* To load deferred JavaScript
+
+	function loadScripts() {
+	  var scripts = document.getElementsByTagName('script');
+	  var scriptIndex = 0;
+	  for (var i = 0, len = scripts.length; i < len; i++) {
+		var scriptEl = scripts[scriptIndex];
+		if (scriptEl.type == 'notJs') {
+		  scriptEl.type = 'text/javascript';
+		  scriptEl.parentNode.removeChild(scriptEl);
+		  document.body.appendChild(scriptEl); 
+		} else {
+		  scriptIndex++;
+		}
+	  }
+	}
+	window.onload = loadScripts;
+	
+* Results of deferring JavaScript
+
+- Parsing is delayed till we actually need it
+
+.image ./chart-6.png
+
+* Profiling DOM updates
+
+.image ./timeline-events.png
+
+* Poor DOM manipulation
+
+	var testDiv = document.getElementById('testdiv');
+
+	var div1 = document.createElement('div');
+	div1.innerHTML = 'abc';
+	testDiv.appendChild(div1);
+	var div1Width = div1.offsetWidth;
+	console.info('Div 1 is ' + div1Width + 'px wide.');
+
+	var div2 = document.createElement('div');
+	div2.innerHTML = 'abcd';
+	testDiv.appendChild(div2);
+	var div2Width = div2.offsetWidth;
+	console.info('Div 2 is ' + div2Width + 'px wide.');
+
+	var div3 = document.createElement('div');
+	div3.innerHTML = 'abcde';
+	testDiv.appendChild(div3);
+	var div3Width = div3.offsetWidth;
+	console.info('Div 3 is ' + div3Width + 'px wide.');
+	
+* Good DOM manipulation
+
+	var testDiv = document.getElementById('testdiv');
+
+	var div1 = document.createElement('div'), div2 = document.createElement('div'),
+		div3 = document.createElement('div');
+
+	div1.innerHTML = 'abc';
+	div2.innerHTML = 'abcd';
+	div3.innerHTML = 'abcde';
+
+	testDiv.appendChild(div1);
+	testDiv.appendChild(div2);
+	testDiv.appendChild(div3);
+
+	console.info('Div 1 is ' + div1.offsetWidth + 'px wide.');
+	console.info('Div 2 is ' + div2.offsetWidth + 'px wide.');
+	console.info('Div 3 is ' + div3.offsetWidth + 'px wide.');
+	
+* Results of good DOM manipulation
+
+.image ./timeline-events-good.png
+
+* Statistics
+
+Time to execute handler 1000x on desktop Chrome
+
+- 9s for bad handler
+- 2.5s for good handler
+- 72% improvement
+
+Time to execute handler 100x on Chrome for Android
+
+- 5s for bad handler
+- 1.7s for good handler
+- 66% improvement
+
+* Conclusion
+
+- Web apps require a significant amount of optimization for mobile
+- Some techniques include minimizing requests, minifying JS and CSS, and correctly modifying the DOM
+- Creating mobile-friendly user experience is very important currently and will continue to be
+- This article addressed some of the best ways we can improve mobile performance
+
+* Questions
+
+- Which one of the techniques do you think would be easiest to apply to your own work? Why?
+- Which one of the hinderers to mobile performance surprised you the most?
+- The Google study mentioned a Chrome addon called PageSpeed to monitor performance. Have you used it or any other performance tool? If so, what about it do you find useful
+	
+
+
 
 
