@@ -34,7 +34,8 @@ nharris@cedarville.edu
 
 * Minimize HTTP Requests and round trips
 
-** Use AppCache
+Use AppCache
+
 - Controlled by manifest file which tells the browser where to get resources
 - Problem: All content must be reloaded if the manifest file changes
 - Author recommends attempting to fit framework of site in first packet
@@ -88,19 +89,19 @@ nharris@cedarville.edu
 
 * Interesting page load metrics
 
-** navigationStart
+*navigationStart*
 
 - Time that user initiated load of this page
 
-** responseStart
+*responseStart*
 
 - Time that browser starts receiving content
 
-**domContentLoadedEventStart
+*domContentLoadedEventStart*
 
 - Time that the document becomes interactive
 
-**loadEventStart
+*loadEventStart*
 
 - Time that document and all resources are downloaded
 
@@ -295,7 +296,7 @@ Time to execute handler 100x on Chrome for Android
 
 - Which one of the techniques do you think would be easiest to apply to your own work? Why?
 - Which one of the hinderers to mobile performance surprised you the most?
-- The Google study mentioned a Chrome addon called PageSpeed to monitor performance. Have you used it or any other performance tool? If so, what about it do you find useful
+- The Google study mentioned a Chrome addon called PageSpeed to monitor performance. Have you used it or any other performance tool? If so, what about it do you find useful?
 	
 
 
