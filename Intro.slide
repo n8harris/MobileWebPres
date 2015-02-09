@@ -27,13 +27,13 @@ nharris@cedarville.edu
 - Use CSS sprites
 
 .image ./css-sprite.png _ 300
-.caption *Example*CSS*Sprite*
+.caption _Example_CSS_Sprite_
 
 * Minimize HTTP Requests and round trips
 
 - Use AppCache
--- Controlled by manifest file which tells the browser where to get resources
--- Problem: All content must be reloaded if the manifest file changes
+- Controlled by manifest file which tells the browser where to get resources
+- Problem: All content must be reloaded if the manifest file changes
 - Author recommends attempting to fit framework of site in first packet
 
 * Compress Files
